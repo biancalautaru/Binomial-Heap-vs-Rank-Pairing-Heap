@@ -3,15 +3,10 @@
 #include <string>
 #include <set>
 
-namespace rand_f{
-    template<typename T>
-    T rand_num(T low, T high);
-}
+namespace rand_f{ int rand_num(int low, int high); }
 
-template<typename T>
-void heap_num_picker(std::set<T> heap_set, T &x);
+void heap_num_picker(std::set<int> heap_set, int &x);
 
-template<typename T>
 void generate_test_file(const std::string& filename, int num_of_heaps,
     int queries, int ins_w, int del_w, int see_w, int mer_w);
 #endif
