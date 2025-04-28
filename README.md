@@ -17,7 +17,23 @@ This project goes over the comparison between the Binomial Heap and the Rank-Pai
 
 ## 1. Introduction
 
+This documentation will go through the actual implementations of all components of this project and the ideas behind them; the classes used in the heap applications are kept separate, each having its header file (`binomial_heap.h` and `rank_pairing_heap.h`), while the query generator has its pair of source (`query_generator.cpp`) and header (`query_generator.h`) files.
+
 ## 2. Query Generator
+
+The generator's primary aim is to have a *weighted decision based system* so that the numbers printed could correlate with each other in necessary circumstances. This outlines the seven arguments required for `generate_test_file`, the *main function* that is in charge of query creation.
+
+To put it another way, the last four arguments indicate the percentage of a **type** of operation to be called for, while the first three arguments are intended for the *name of the generated file*, the number of *maximum possible heaps that can be built* from the queries, and the *actual number of queries* contained by the file.
+
+Since there are multiple queries that can be made *(seven in total)*, they can be ultimately divided into four categories:
+* Insertion 
+* Deletion
+* Search 
+* Meld
+
+For the *randomness* effect of the numbers selected to be written, the implementation utilises the `<random>` library, available after **C++11**, by importing the **Mersenne Twister 19937** generator `(mt19937)`, an instantiation of `mersenne_twister_engine`; function `int rand_num(int low, int high)` is defined, taking as arguments both (lower and upper) bounds of the number that is to be "picked".
+
+Diving into the functionality of the main loop of this main function for query generation,  
 
 ## 3. Binomial Heap
 ### 3.1. Description, Complexities
