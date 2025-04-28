@@ -1,7 +1,3 @@
-#ifndef RANK_PAIRING_HEAP_H
-#define RANK_PAIRING_HEAP_H
-
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -34,28 +30,25 @@ public:
         node->value = INT_MIN;
         bubble_up(node);
         extract_min();
-    } // op_id = 2
+    }
 
     int contains(int value) const { return contains_in_subtree(root, value) ? 1 : 0; }
-    // op_id = 3
 
     int max_leq(int x) const { return max_leq_in_subtree(root, x, INT_MIN); }
-    // op_id = 4
 
     int min_geq(int x) const { return min_geq_in_subtree(root, x, INT_MAX); }
-    // op_id = 5
 
     vector<int> sorted_range(int x, int y) const {
         vector<int> result;
         collect_in_range(root, x, y, result);
         sort(result.begin(), result.end());
         return result;
-    } // op_id = 6
+    }
 
     void meld(RankPairingHeap& other) {
         root = link(root, other.root);
         other.root = nullptr;
-    } // op_id = 7
+    }
 
 private:
     static RpNode* link(RpNode* a, RpNode* b) {
@@ -139,5 +132,3 @@ private:
         collect_in_range(node->right_sibling, x, y, result);
     }
 };
-
-#endif

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -210,8 +209,3 @@ public:
 		return result;
 	}
 };
-
-int main() {
-
-  return 0;
-}

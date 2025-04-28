@@ -1,6 +1,8 @@
+#ifndef RANK_PAIRING_HEAP_H
+#define RANK_PAIRING_HEAP_H
+
 #include <iostream>
 #include <vector>
-#include <cmath>
 #include <algorithm>
 using namespace std;
 
@@ -31,25 +33,32 @@ public:
         node->value = INT_MIN;
         bubble_up(node);
         extract_min();
-    }
+    } // op_id = 2
 
     int contains(int value) const { return contains_in_subtree(root, value) ? 1 : 0; }
+    // op_id = 3
 
     int max_leq(int x) const { return max_leq_in_subtree(root, x, INT_MIN); }
+    // op_id = 4
 
     int min_geq(int x) const { return min_geq_in_subtree(root, x, INT_MAX); }
+    // op_id = 5
 
     vector<int> sorted_range(int x, int y) const {
         vector<int> result;
         collect_in_range(root, x, y, result);
         sort(result.begin(), result.end());
         return result;
-    }
+    } // op_id = 6
 
     void meld(RankPairingHeap& other) {
         root = link(root, other.root);
         other.root = nullptr;
-    }
+    } // op_id = 7
+
+    int ext_min() {
+        return extract_min();
+    } // op_id = 8
 
 private:
     static RpNode* link(RpNode* a, RpNode* b) {
@@ -74,8 +83,8 @@ private:
         }
     }
 
-    void extract_min() {
-        if (!root) return;
+    int extract_min() {
+        if (!root) return -1;
 
         vector<RpNode*> children;
         RpNode* child = root->left_child;
@@ -87,11 +96,15 @@ private:
             child = next;
         }
 
+        int result = root->value;
+
         delete root;
         root = nullptr;
         for (RpNode* c : children) {
             root = link(root, c);
         }
+
+        return result;
     }
 
     static RpNode* find_node(RpNode* node, int value) {
@@ -132,10 +145,6 @@ private:
         collect_in_range(node->left_child, x, y, result);
         collect_in_range(node->right_sibling, x, y, result);
     }
-
 };
 
-int main() {
-
-    return 0;
-}
+#endif
