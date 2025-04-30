@@ -2,13 +2,8 @@
 #define RANK_PAIRING_HEAP_H
 
 #include <vector>
-#include <cmath>
 #include <algorithm>
-#include <fstream>
 #include <climits>
-#include <set>
-#include <map>
-#include <queue>
 using namespace std;
 
 class RpNode {
@@ -60,25 +55,6 @@ public:
         root = link(root, other.root);
         other.root = nullptr;
     } // op_id = 7
-
-    void extract_min() {
-        if (!root) return;
-
-        vector<RpNode*> children;
-        RpNode* child = root->left_child;
-        while (child) {
-            RpNode* next = child->right_sibling;
-            child->parent = nullptr;
-            child->right_sibling = nullptr;
-            children.push_back(child);
-            child = next;
-        }
-        delete root;
-        root = nullptr;
-        for (RpNode* c : children) {
-            root = link(root, c);
-        }
-    } // op_id = 8
 
 private:
     static RpNode* link(RpNode* a, RpNode* b) {
@@ -141,6 +117,25 @@ private:
         collect_in_range(node->left_child, x, y, result);
         collect_in_range(node->right_sibling, x, y, result);
     }
+
+    void extract_min() {
+        if (!root) return;
+
+        vector<RpNode*> children;
+        RpNode* child = root->left_child;
+        while (child) {
+            RpNode* next = child->right_sibling;
+            child->parent = nullptr;
+            child->right_sibling = nullptr;
+            children.push_back(child);
+            child = next;
+        }
+        delete root;
+        root = nullptr;
+        for (RpNode* c : children) {
+            root = link(root, c);
+        }
+    } // op_id = 8
 };
 
 #endif
