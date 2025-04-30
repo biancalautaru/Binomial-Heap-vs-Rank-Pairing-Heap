@@ -1,9 +1,14 @@
 #ifndef RANK_PAIRING_HEAP_H
 #define RANK_PAIRING_HEAP_H
 
-#include <iostream>
 #include <vector>
+#include <cmath>
 #include <algorithm>
+#include <fstream>
+#include <climits>
+#include <set>
+#include <map>
+#include <queue>
 using namespace std;
 
 class RpNode {
@@ -56,8 +61,23 @@ public:
         other.root = nullptr;
     } // op_id = 7
 
-    int ext_min() {
-        return extract_min();
+    void extract_min() {
+        if (!root) return;
+
+        vector<RpNode*> children;
+        RpNode* child = root->left_child;
+        while (child) {
+            RpNode* next = child->right_sibling;
+            child->parent = nullptr;
+            child->right_sibling = nullptr;
+            children.push_back(child);
+            child = next;
+        }
+        delete root;
+        root = nullptr;
+        for (RpNode* c : children) {
+            root = link(root, c);
+        }
     } // op_id = 8
 
 private:
@@ -83,30 +103,6 @@ private:
         }
     }
 
-    int extract_min() {
-        if (!root) return -1;
-
-        vector<RpNode*> children;
-        RpNode* child = root->left_child;
-        while (child) {
-            RpNode* next = child->right_sibling;
-            child->parent = nullptr;
-            child->right_sibling = nullptr;
-            children.push_back(child);
-            child = next;
-        }
-
-        int result = root->value;
-
-        delete root;
-        root = nullptr;
-        for (RpNode* c : children) {
-            root = link(root, c);
-        }
-
-        return result;
-    }
-
     static RpNode* find_node(RpNode* node, int value) {
         if (!node) return nullptr;
         if (node->value == value) return node;
@@ -126,16 +122,16 @@ private:
         if (!node) return best;
         if (node->value <= x && node->value > best)
             best = node->value;
-        best = max_leq_in_subtree(node->left_child, x, best);
-        return max_leq_in_subtree(node->right_sibling, x, best);
+        int left_best = max_leq_in_subtree(node->left_child, x, best);
+        return max_leq_in_subtree(node->right_sibling, x, left_best);
     }
 
     static int min_geq_in_subtree(const RpNode* node, int x, int best) {
         if (!node) return best;
         if (node->value >= x && node->value < best)
             best = node->value;
-        best = min_geq_in_subtree(node->left_child, x, best);
-        return min_geq_in_subtree(node->right_sibling, x, best);
+        int left_best = min_geq_in_subtree(node->left_child, x, best);
+        return min_geq_in_subtree(node->right_sibling, x, left_best);
     }
 
     static void collect_in_range(const RpNode* node, int x, int y, vector<int>& result) {

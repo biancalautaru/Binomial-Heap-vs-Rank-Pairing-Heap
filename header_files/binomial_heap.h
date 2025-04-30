@@ -1,7 +1,6 @@
 #ifndef BINOMIAL_HEAP_H
 #define BINOMIAL_HEAP_H
 
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -51,7 +50,7 @@ public:
 		other.trees.clear();
 		other.total = 0;
 		consolidate();
-	}
+	} // op_id = 7
 
 	void insert(int value) {
 		BiNode* nod = new BiNode(value);
@@ -59,7 +58,7 @@ public:
 		heap.trees.push_back(nod);
 		heap.total++;
 		merge(heap);
-	}
+	} // op_id = 1
 
 	int extract_min() {
 		BiNode* minNode = min_node;
@@ -74,7 +73,7 @@ public:
 		find_min();
 		total--;
 		return minNode->value;
-	}
+	} // op_id = 8
 
 	void link(BiNode* tree1, BiNode* tree2) {
 		if (tree2->value < tree1->value)
@@ -150,13 +149,13 @@ public:
 				return found;
 		}
 		return nullptr;
-	}
+	} // op_id = 3
 
 	void delete_value(int value) {
 		BiNode* node = find_value(value);
 		if (node != nullptr)
 			delete_node(node);
-	}
+	} // op_id = 2
 
 	int max_less_than_in_tree(BiNode* node, int value, int maxValue) {
 		if (node == nullptr)
@@ -175,7 +174,7 @@ public:
 		if (maxValue == INT_MIN)
 			return -1;
 		return maxValue;
-	}
+	} // op_id = 4
 
 	int min_more_than_in_tree(BiNode* node, int value, int minValue) {
 		if (node == nullptr)
@@ -194,7 +193,7 @@ public:
 		if (minValue == INT_MAX)
 			return -1;
 		return minValue;
-	}
+	} // op_id = 5
 
 	void collect_in_range(BiNode* node, int x, int y, vector<int>& result) {
 		if (node == nullptr)
@@ -211,7 +210,7 @@ public:
 			collect_in_range(tree, x, y, result);
 		sort(result.begin(), result.end());
 		return result;
-	}
+	} // op_id = 6
 };
 
 #endif

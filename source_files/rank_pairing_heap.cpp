@@ -1,6 +1,11 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <fstream>
+#include <climits>
+#include <set>
+#include <map>
+#include <queue>
 using namespace std;
 
 class RpNode {
@@ -30,25 +35,47 @@ public:
         node->value = INT_MIN;
         bubble_up(node);
         extract_min();
-    }
+    } // op_id = 2
 
     int contains(int value) const { return contains_in_subtree(root, value) ? 1 : 0; }
+    // op_id = 3
 
     int max_leq(int x) const { return max_leq_in_subtree(root, x, INT_MIN); }
+    // op_id = 4
 
     int min_geq(int x) const { return min_geq_in_subtree(root, x, INT_MAX); }
+    // op_id = 5
 
     vector<int> sorted_range(int x, int y) const {
         vector<int> result;
         collect_in_range(root, x, y, result);
         sort(result.begin(), result.end());
         return result;
-    }
+    } // op_id = 6
 
     void meld(RankPairingHeap& other) {
         root = link(root, other.root);
         other.root = nullptr;
-    }
+    } // op_id = 7
+
+    void extract_min() {
+        if (!root) return;
+
+        vector<RpNode*> children;
+        RpNode* child = root->left_child;
+        while (child) {
+            RpNode* next = child->right_sibling;
+            child->parent = nullptr;
+            child->right_sibling = nullptr;
+            children.push_back(child);
+            child = next;
+        }
+        delete root;
+        root = nullptr;
+        for (RpNode* c : children) {
+            root = link(root, c);
+        }
+    } // op_id = 8
 
 private:
     static RpNode* link(RpNode* a, RpNode* b) {
@@ -73,26 +100,6 @@ private:
         }
     }
 
-    void extract_min() {
-        if (!root) return;
-
-        vector<RpNode*> children;
-        RpNode* child = root->left_child;
-        while (child) {
-            RpNode* next = child->right_sibling;
-            child->parent = nullptr;
-            child->right_sibling = nullptr;
-            children.push_back(child);
-            child = next;
-        }
-
-        delete root;
-        root = nullptr;
-        for (RpNode* c : children) {
-            root = link(root, c);
-        }
-    }
-
     static RpNode* find_node(RpNode* node, int value) {
         if (!node) return nullptr;
         if (node->value == value) return node;
@@ -112,16 +119,16 @@ private:
         if (!node) return best;
         if (node->value <= x && node->value > best)
             best = node->value;
-        best = max_leq_in_subtree(node->left_child, x, best);
-        return max_leq_in_subtree(node->right_sibling, x, best);
+        int left_best = max_leq_in_subtree(node->left_child, x, best);
+        return max_leq_in_subtree(node->right_sibling, x, left_best);
     }
 
     static int min_geq_in_subtree(const RpNode* node, int x, int best) {
         if (!node) return best;
         if (node->value >= x && node->value < best)
             best = node->value;
-        best = min_geq_in_subtree(node->left_child, x, best);
-        return min_geq_in_subtree(node->right_sibling, x, best);
+        int left_best = min_geq_in_subtree(node->left_child, x, best);
+        return min_geq_in_subtree(node->right_sibling, x, left_best);
     }
 
     static void collect_in_range(const RpNode* node, int x, int y, vector<int>& result) {

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <iomanip>
 
 #include "header_files/generator.h"
 #include "header_files/binomial_heap.h"
@@ -124,14 +125,14 @@ int main() {
                     rp_heaps[heap_id].meld(rp_heaps[heap_id2]);
                     break;}
                 case 8: {
-                    w << rp_heaps[heap_id].ext_min() << '\n';
+                    rp_heaps[heap_id].extract_min();
                     break;}
                 default: break;
             }
         }
         end_time = chrono::high_resolution_clock::now();
         time = end_time - start_time;
-        res << filename.substr(6) << " | N = " << N << " | Q = " << Q << " | Binomial | " << time.count() << " secunde\n";
+        res << filename.substr(6) << " | N = " << N << " | Q = " << Q << " | Rank-Pairing | " << time.count() << " secunde\n";
         cout << filename.substr(6) << " | Rank-Pairing | Done!\n";
     }
     return 0;
