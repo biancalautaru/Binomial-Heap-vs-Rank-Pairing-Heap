@@ -35,6 +35,12 @@ For the *randomness* effect of the numbers selected to be written, the implement
 
 Diving into the functionality of the main loop of this main function for query generation,  
 
+| Operation  | find-max | delete-max | increase-key | insert    | meld      | make-heap |
+|------------|----------|------------|---------------|-----------|-----------|-----------|
+| **Binary** | Θ(1)     | Θ(log n)   | Θ(log n)      | Θ(log n)  | Θ(n)      | Θ(n)      |
+| **Skew**   | Θ(1)     | O(log n) *(am.)* | O(log n) *(am.)* | O(log n) *(am.)* | O(log n) *(am.)* | Θ(n) *(am.)* |
+
+
 ## 3. Binomial Heap
 ### 3.1. Description, Complexities
 ### 3.2. Implementation
