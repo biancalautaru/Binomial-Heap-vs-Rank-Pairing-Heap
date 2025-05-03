@@ -80,7 +80,7 @@ int main() {
             }
             end_time = chrono::high_resolution_clock::now();
             time = end_time - start_time;
-            res << p.first << " | N = " << N << " | Q = " << Q << " | Binomial | " << time.count() << " secunde\n";
+            res << p.first << " | N = " << N << " | Q = " << Q << " | Binomial | " << time.count() << " seconds\n";
             cout << filename.substr(6) << " | Binomial | Done!\n";
             cout.flush();
 
