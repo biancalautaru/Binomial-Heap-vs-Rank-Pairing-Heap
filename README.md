@@ -120,6 +120,9 @@ The implementation of the Binomial Heap is encapsulated in two classes:
 
 ## 5. Comparison
 
+![n=5,q=5000](https://github.com/user-attachments/assets/3f46ca4a-9b46-4639-b483-ccdc82fba4bb)
+![n=20,q=200000](https://github.com/user-attachments/assets/2d8a05a7-7fd5-4709-8808-f75d2f679195)
+![n=100,q=1000000](https://github.com/user-attachments/assets/dbd92c01-d6b4-4d7e-a588-97f2109b1925)
 
 
 ## 6. Resources
