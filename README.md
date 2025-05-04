@@ -33,8 +33,11 @@ To put it another way, the last four arguments indicate the percentage of a **ty
 
 For the *randomness* effect of the numbers selected to be written, the implementation utilises the `<random>` library, available after **C++11**, by importing the **Mersenne Twister 19937** generator `(mt19937)`, an instantiation of `mersenne_twister_engine`; function `int rand_num(int low, int high)` is defined, taking as arguments both (lower and upper) bounds of the number that is to be "picked".
 
-Diving into the functionality of the main loop of this main function for query generation,
+Diving into the functionality of the main loop of this main function for query generation, the *maximum number of heaps that can be reached* and the *number of queries to be generated* are passed from the parameters and written on the first line of the file to be generated; after that, the values of weights for the decision of frequency of some operations is determined based on the last four values passed as parameters (as explained earlier).
 
+The algorithm keeps track of all the numbers generated for the heaps in a vector of sets, for quick access; if the program just started writing out queries, obviously, the first operation should be an **insert type** operation. If not, the program picks a random heap to perform the chosen operation on, and, obviously, the operation itself; if the operation is of **insert type**, there is a slight *(10%)* chance of creating a new heap to be used in further queries from that point on.
+
+After the function determines a heap and an operation to be performed, we calculate the arguments that have to be written for that specific operation: in case of an **insertion**, a new number that hasn't been used in the current heap is picked; in case of a **deletion**, there is a small chance of picking a completely random number that may or may not be part of the current heap, but at most times we look for a number that has already been inserted before in the current heap (here's where the `void heap_num_picker(const std::set<int>& heap_set, int &x)` comes in handy, a function that randomly picks a numerical value that is already contained in the given heap). For **search type** operations, the algorithm picks a random number that already exists in the heap and outputs a value accordingly. Finally, if the operation is a **merge type**, the function will randomly pick a secondary heap (that is not the same as the firstly picked heap, and after that it deletes its existence from the vector of sets).
 
 ## 3. Binomial Heap
 
@@ -101,22 +104,60 @@ The implementation of the Binomial Heap is encapsulated in two classes:
 
 ### 4.1. Description
 
+A **rank-pairing heap** is an advanced priority queue data structure that combines the asymptotic efficiency of *Fibonacci heaps* with much of the simplicty of *pairing heaps*. Unlike all other heap implementations that match the bounds of *Fibonacci heaps*, our structure needs only one cut and no other *structural changes* per `key decrease`; the trees representing the heap can therefore evolve to have arbitrary structure.
 
+Rank-pairing heaps consist of a collection of trees that satisfy the heap property:
+- Each node has a key and the key of the node is less than or equal to the keys of its children *(basic property of a min-heap)*.
+- The trees are arranged in a *linked list*, with each tree's root participating in this list.
+
+Each node has a **rank** that helps maintain the structural integrity of the heap during operations.
+
+Key properties:
+- A rank-pairing heap with `n` nodes has `O(log n)` trees.
+- The trees in a rank-pairing heap can be either **type-1** or **type-2** trees.
+- **Type-1 trees** have the property that the rank of a node is 1 more than the rank of its right child; simpler but harder to analyze and has larger constant factors in the time bounds.
+- **Type-2 trees** have the property that the rank of a node equals the rank of its right child; a relaxed version that is easier to analyze and has smaller constant factors in the time bounds.
+- Each tree satistfies the **rank rule**: the rank of a node is at least the rank of *its left child*.
 
 ### 4.2. Complexities
 
+|     Operation     | find-min |  insert   |  delete  | find |   meld   | largest less than | smallest greater than | sort interval |
+|:-----------------:|:--------:|:---------:|:--------:|:----:|:--------:|:-----------------:|:---------------------:|:-------------:|
+| **Rank-Pairing Heap** |   Θ(1)   | Θ(1) | O(log n) (am.) | O(n) | Θ(1) |       O(n)        |         O(n)          |  O(n log k)   |
 
+*where n is the number of nodes and k is the length of the interval*
 
 ### 4.3. Implementation
 
 #### 4.3.1. Structure
 
+The implementation of the Binomial Heap is encapsulated in two classes:
 
+**`RpNode`** - represents a node in a rank-pairing heap:
+- `value`: The key or value of the node.
+- `rank`: Rank of the node.
+- `parent`: A pointer to its parent.
+- `left_child`:
+- `right_sibling`: 
+
+**`BinomialHeap`** - represents the heap as a ranked-collection of its nodes:  
+- `root`: Current root the of the heap (can be changed at any time).
 
 #### 4.3.2. Operations
 
+- ***find-min*** - `heap.root`: a pointer to the node with the minimum value is stored in the heap at all times.
 
+- ***insert*** - `insert(value)`: creates a new node with the given value, linking this node with the existing root using the `link(h1, h2)` function (also ensures that the node with the smaller value becomes the root).
 
+- ***delete*** - `delete_value(value)`: locates a node with the given value, assigns it the lowest possible value, bubbles it up to the root and then removes the root using the `extract_min` function. This operation requires finding the node *(O(n) in this implementation)*, followed by bubble-up *(O(log n))* and extract-min *(O(log n))*. The overall complexity is dominated by the find operation which requires traversing the entire heap in the worst case.
+
+- ***find*** - `find_value(value)`: iterates through the roots of all binomial trees and performs a recursive depth-first search with the helper function `contains_in_subtree(root, value)`.
+
+- ***largest less than*** - `max_leq(value)` and ***smallest greater than*** - `min_geq(value)`: traverse all nodes to find the values.
+
+- ***sort interval*** - `sorted_in_range(x, y)`: collects all values in the specified range (using the helper function `collect_in_range(root, x, y, result)`) and sorts the values returned as a vector (from `result`).
+
+- ***meld*** - `meld(other)`: combines another rank-pairing heap into the current one by linking the two roots of the heaps (using the helper function `link(h1, h2)`).
 
 ## 5. Comparison
 
@@ -132,3 +173,4 @@ The implementation of the Binomial Heap is encapsulated in two classes:
 [GeeksforGeeks](https://www.geeksforgeeks.org/binomial-heap-2)
 
 *Rank-Pairing Heap:*
+[Wikipedia - Comparison of theoretic bounds](https://en.wikipedia.org/wiki/Heap_(data_structure)), [Princeton University](https://www.cs.princeton.edu/courses/archive/spr10/cos423/handouts/rankpairingheaps.pdf)
